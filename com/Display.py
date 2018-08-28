@@ -1,6 +1,7 @@
+import sys
 import subprocess
 from enum import Enum
-
+import math
 class Display(object):
     
     def __init__(self,name_):
@@ -16,25 +17,36 @@ class DisplayManager(object):
 
     def getConnectedDisplays(self):
         connected_displays = []
-        xrandr_result = self.execXrandrCommand('xrandr -q | grep -i "connected"')
-        xrandr_result = xrandr_result.strip()
-        lines = xrandr_result.split('\n')
-        for line in lines:
-            words = line.split(' ')
-            connected_displays.append(Display(words[0]))
-            self.fillDisplayAttributes(connected_displays[-1])
+        try:        
+            xrandr_result = self.execXrandrCommand('xrandr -q | grep -i "connected"')
+            xrandr_result = xrandr_result.strip()
+            #Python3 modification....--------------------------------
+            # python3 sees this as a byte string...that's why we 
+            # decode it to convert it to string type
+            xrandr_result = xrandr_result.decode()
+            #--------------------------------------------------------
+            lines = xrandr_result.split('\n')
+            for line in lines:
+                words = line.split(' ')
+                connected_displays.append(Display(words[0]))
+                self.fillDisplayAttributes(connected_displays[-1])
+        except:
+            print("Error:"+sys.exc_info()[0]+"\n")
         return connected_displays
 
 
     def fillDisplayAttributes(self,display):
         str_ = self.execXrandrCommand("xrandr --verbose | grep "+display.name+" -A 5").strip()
+        #Python3 modification....--------------------------------
+        str_ = str_.decode()# converting from bytes to string...
+        #--------------------------------------------------------
         disp_attrs = dict(self.decodeAttributeString(str_))
         
         #The dict contains more attributes but we are only interested in brightness and gamma
         if "Brightness" in disp_attrs:
             display.brightness = float(disp_attrs["Brightness"])
             gamma = disp_attrs["Gamma"].strip().split(":")
-            display.red = float(gamma[0])
+            display.red = float(gamma[0]) 
             display.green = float(gamma[1])
             display.blue = float(gamma[2])
             display.active = True
@@ -54,7 +66,7 @@ class DisplayManager(object):
     def changeAttributes(self,display):
         str_ = "xrandr --output {0} --brightness {1} --gamma {2}:{3}:{4}"
         str_ = str_.format(display.name,display.brightness,display.red,display.green,display.blue)
-        print("command: "+str_)
+        #print("command: "+str_)
         self.execXrandrCommand(str_)
 
 

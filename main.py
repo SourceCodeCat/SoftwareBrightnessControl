@@ -1,16 +1,29 @@
 import sys
 from os import path
 from com.Display import DisplayManager
+from com.Windows import MainWindow
+import gi
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
 
+
+#retrieving the available displays-------------------
 displayManager = DisplayManager()
 displays = displayManager.getConnectedDisplays()
-for d in displays:
-    print("name:%s\nactive:%s\nbrightness:%.1f\nred:%.1f\nblue:%.1f\ngreen:%.1f\n\n" %\
-     (d.name,d.active,d.brightness,d.red,d.blue,d.green))
+#----------------------------------------------------
 
+#----------------------------------------------------
+#this callback receives the changes in the currently 
+# selected display 
+#----------------------------------------------------   
+def onPropertiesChanged(display):
+    displayManager.changeAttributes(display)
 
-#displays[0].brightness=0.5
-#displays[0].red=0.25
-#displays[0].green=0.50
-#displays[0].green=0.75
-#displayManager.changeAttributes(displays[0])
+#----------------------------------------------------
+#insantiating a mainWindow object passing the available displays and the callback function
+#in charge of receiving the changes in the display properties...
+#----------------------------------------------------
+mainWindowUI = MainWindow(displays,onPropertiesChanged)
+mainWindowUI.connect("destroy",Gtk.main_quit)
+mainWindowUI.show_all()
+Gtk.main()
