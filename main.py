@@ -20,7 +20,7 @@ def onPropertiesChanged(display):
     displayManager.changeAttributes(display)
 
 #----------------------------------------------------
-#insantiating a mainWindow object passing the available displays and the callback function
+#instantiating a mainWindow object passing the available displays and the callback function
 #in charge of receiving the changes in the display properties...
 #----------------------------------------------------
 mainWindowUI = MainWindow(displays,onPropertiesChanged)
