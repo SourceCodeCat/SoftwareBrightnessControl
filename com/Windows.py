@@ -1,3 +1,17 @@
+# SoftwareBrightnessControl is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Brightness Controller is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Brightness Controller.  If not, see
+# <http://www.gnu.org/licenses/>.
+#Author: Marco Antonio Salgado Martinez
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
@@ -61,8 +75,7 @@ class MainWindow(Gtk.Window):
         if tree_iter is not None:
             model = combo.get_model()
             display = model[tree_iter][0]
-            #self.displaySelectedCallback(display)
-            print("Selected Display: %s\n" % display)
+            #print("Selected Display: %s\n" % display)
             for d in self.availableDisplays:
                 if d.name == display:
                     self.currentSelectedDisplay = d

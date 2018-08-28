@@ -1,3 +1,17 @@
+# SoftwareBrightnessControl is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Brightness Controller is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Brightness Controller.  If not, see
+# <http://www.gnu.org/licenses/>.
+#Author: Marco Antonio Salgado Martinez
 import sys
 import subprocess
 from enum import Enum
@@ -30,6 +44,11 @@ class DisplayManager(object):
                 words = line.split(' ')
                 connected_displays.append(Display(words[0]))
                 self.fillDisplayAttributes(connected_displays[-1])
+                #just keep those active displays...quick FIX...
+                #TODO: change this to a more elegant solution....
+                if not connected_displays[-1].active:
+                    connected_displays.pop()
+                #-------------------------------------------------
         except:
             print("Error:"+sys.exc_info()[0]+"\n")
         return connected_displays
